@@ -15,17 +15,19 @@ $(function(){
     var w = 5;
     var h = w * 1;
     /// store reference to character's position and element
-    var character = {
+    var viking = {
       x: Math.max(w, Math.floor(Math.random() * ($('#field').width() - w))),
       y: Math.max(h, Math.floor(Math.random() * ($('#field').height() - h))),
       speedMultiplier: 2,
-      element: $('#character'),
       h: h,
       w: w,
       alert: false,
       health: 100,
-      healthFactor: 2 // the higher the absolute value, the slower the change rate, neg = gain
+      color: 'black',
+      healthRegenRatio: 10 // higher ratio means slower rate
     };
+
+    var character = jQuery.extend(true, {}, viking);
 
     docKeyPress = function(e) {
         var kc = e.keyCode || e.which;
@@ -47,11 +49,11 @@ $(function(){
               || keys[keys.LEFT] === true
         )
         {
-          character.healthFactor = 2;
+          // something to do when moving
         }
         else
         {
-          character.healthFactor = -2;
+          // soething for standing still
         }
 
       };
@@ -70,20 +72,22 @@ $(function(){
       var d = new Date()
       now = parseInt(d.getTime() / 1000);
 
-      if ( !isNaN(now - t) && !character.alert )
+      if ( !isNaN(now - t) && !character.alert && character.health < 100 )
       {
-        console.log( now, t, (now - t), character.healthFactor, character.health, (character.healthFactor >= 0 ? 100 : character.health) );
-        character.health = (character.healthFactor >= 0 ? 100 : character.health ) - Math.floor( (now - t)/character.healthFactor );
-        character.health = character.health > 0 ? character.health : 0;
-        character.health = character.health < 100 ? character.health : 100;
+        character.health = character.health + (1/character.healthRegenRatio);
+
       }
 
-      if ( character.health == 0 )
+console.log(character.health)
+      character.health = character.health > 0 ? character.health : 0;
+      character.health = character.health < 100 ? character.health : 100;
+
+      if ( Math.floor(character.health) == 0 )
       {
         alertCharacter();
       }
 
-      $('#health').html(character.health);
+      $('#health').html(Math.floor(character.health));
     }
 
     var alertCharacter = function() {
@@ -97,11 +101,12 @@ $(function(){
     }
 
     var clearCharacterAlert = function() {
-      character.color = 'black';
-      character.h = character.h / 2;
-      character.w = character.w / 2;
-      character.alert = false;
-      character.health = 100;
+      var y = character.y;
+      var x = character.x;
+
+      character = viking;
+      character.x = x;
+      character.y = y;
 
       setGameTime();
     }
@@ -147,7 +152,8 @@ $(function(){
       }
 
       if (Math.random() < 0.01) {
-
+        character.health *= .75
+        $('#field').animate({backgroundColor:'#e49090'},100,'linear',function(){$(this).animate({backgroundColor:'#90ee90'},100)})
       }
     };
 
@@ -183,7 +189,6 @@ $(function(){
     setGameTime();
     moveCharacter();
     updateCharacter();
-    alertCharacter();
     generateFood();
 
     setInterval(function() {
