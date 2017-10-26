@@ -1,8 +1,9 @@
 body {
   font-family: helvetica;
+  background: royalblue;
 }
 
-#character {
+#character, #character-light {
   position: absolute;
   width: 2px;
   height: 2px;
@@ -11,9 +12,11 @@ body {
   z-index:1000;
 }
 
+#character-light { z-index: 999; }
+
 #field {
   position: absolute;
-  top: 10px;
+  top: 25px;
   left: 10px;
   right: 10px;
   bottom: 10px;
@@ -27,9 +30,10 @@ body {
   top: 5px;
   height:15px;
   width:50%;
-  right: 5px;
+  right: 10px;
   border: 1px solid #ff6868;
-  border-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-left-radius: 15px;
 }
 
 #health #bar {
@@ -40,14 +44,22 @@ body {
   right:0;
   width:100%;
   background:#ff6868;
-  border-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-left-radius: 15px;
 }
 
 .food {
-  background: green;
-  position:relative;
-  top:25px;
-  left:25px;
-  width:10px;
-  height:10px;
+  position:absolute;
+  border-radius: 2px;
+  width:2px;
+  height:2px;
+  z-index: 1001;
+}
+
+.apple {
+  background: red;
+}
+
+.orange {
+  background: orange;
 }

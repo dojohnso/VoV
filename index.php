@@ -14,9 +14,10 @@
 </head>
 <body>
 
+	<div id="health"><div id="bar">&nbsp;</div></div>
 	<div id="field">
 	  <div id="character"></div>
-	  <div id="health"><div id="bar">&nbsp;</div></div>
+	  <div id="character-light"></div>
 	</div>
 
 

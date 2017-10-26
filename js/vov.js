@@ -70,13 +70,18 @@ $(function(){
         .css('top', character.y + 'px')
         .css('left', character.x + 'px');
 
+      $('#character-light')
+        .css('width', character.w*(3) + 'px')
+        .css('height', character.h*(3) + 'px')
+        .css('top', (character.y-character.w) + 'px')
+        .css('left', (character.x-character.h) + 'px');
+
       var d = new Date()
       now = parseInt(d.getTime() / 1000);
 
       if ( !isNaN(now - t) && !character.alert && character.health < 100 )
       {
         character.health = character.health + (1/character.healthRegenRatio);
-
       }
 
       character.health = character.health > 0 ? character.health : 0;
@@ -93,7 +98,6 @@ $(function(){
       if ( healthW != prevHealth )
       {
         $('#health #bar').animate({width: healthW+'%', left: (healthBarW * ((100-healthW)/100))+'px'}, 150);
-        // $('#health #bar').css('width', healthW+'%').css('left', (healthBarW * ((100-healthW)/100))+'px' );
 
         prevHealth = healthW;
       }
@@ -162,7 +166,33 @@ $(function(){
 
       if (Math.random() < 0.01) {
         character.health -= 20;
-        $('#field').animate({backgroundColor:'#e49090'},100,'linear',function(){$(this).animate({backgroundColor:'#90ee90'},100)})
+        $('body').animate({backgroundColor:'#f00'},250,'linear',function(){$(this).animate({backgroundColor:'#466cd9'},700)})
+      }
+
+      if ( character.health < 100 )
+      {
+        var charCenX = character.x + character.w/2;
+        var charCenY = character.y + character.h/2;
+
+        var mx = Math.floor(charCenX/10);
+        if ( fruits[mx] )
+        {
+          for ( f in fruits[mx] ) {
+            if (
+                charCenX >= ((fruits[mx][f].x+(fruits[mx][f].w/2)) - character.w*2) &&
+                charCenX <= ((fruits[mx][f].x+(fruits[mx][f].w/2)) + character.w*2) &&
+                charCenY <= ((fruits[mx][f].y+(fruits[mx][f].h/2)) + character.h*2) &&
+                charCenY >= ((fruits[mx][f].y+(fruits[mx][f].h/2)) - character.h*2)
+               )
+            {
+
+              character.health += fruits[mx][f].value;
+              $(fruits[mx][f].element).remove();
+              fruits[mx].splice(f,1)
+              break;
+            }
+          }
+        }
       }
     };
 
@@ -189,9 +219,38 @@ $(function(){
       clearCharacterAlert();
     })
 
+    var seeds = {
+      value: 10,
+      class: 'apple',
+    }
+
+    var fruits = [];
     var generateFood = function() {
-      // @todo
-      $('#field').append('<div class="food"></div>')
+
+      var f = 20;//Math.floor(Math.random()*20)+10;
+
+      for ( var n = 0; n < f; n++ )
+      {
+        var seed = jQuery.extend(true, {}, seeds);
+
+        seed.x = Math.max(character.w, Math.floor(Math.random() * ($('#field').width() - character.w)));
+        seed.y = Math.max(character.h, Math.floor(Math.random() * ($('#field').height() - character.h)));
+
+
+        seed.element = $('<div class="food apple"></div>').css('left',seed.x+'px').css('top',seed.y+'px');
+        $('#field').append( seed.element );
+
+        seed.w = parseInt($(seed.element).width());
+        seed.h = parseInt($(seed.element).height());
+
+        var mx = Math.floor(seed.x/10);
+        if ( ! fruits[mx] )
+        {
+          fruits[mx] = []
+        }
+        fruits[mx].push(seed);
+      }
+
     }
 
     ///////////// initialize //////////////////
