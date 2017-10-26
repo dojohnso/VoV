@@ -16,7 +16,7 @@
 
 	<div id="field">
 	  <div id="character"></div>
-	  <div id="health"><div id="bar"></div></div>
+	  <div id="health"><div id="bar">&nbsp;</div></div>
 	</div>
 
 

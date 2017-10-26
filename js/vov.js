@@ -24,7 +24,7 @@ $(function(){
       alert: false,
       health: 100,
       color: 'black',
-      healthRegenRatio: 10 // higher ratio means slower rate
+      healthRegenRatio: 30 // higher ratio means slower rate
     };
 
     var character = jQuery.extend(true, {}, viking);
@@ -60,6 +60,7 @@ $(function(){
 
     $('body').keyup(docKeyPress).keydown(docKeyPress);
 
+    var prevHealth = character.health;
     var updateCharacter = function() {
       $('#character')
         .css('width', character.w + 'px')
@@ -78,7 +79,6 @@ $(function(){
 
       }
 
-console.log(character.health)
       character.health = character.health > 0 ? character.health : 0;
       character.health = character.health < 100 ? character.health : 100;
 
@@ -87,7 +87,16 @@ console.log(character.health)
         alertCharacter();
       }
 
-      $('#health').html(Math.floor(character.health));
+      healthBarW = parseInt($('#health').width());
+      healthW = Math.floor(character.health);
+
+      if ( healthW != prevHealth )
+      {
+        $('#health #bar').animate({width: healthW+'%', left: (healthBarW * ((100-healthW)/100))+'px'}, 150);
+        // $('#health #bar').css('width', healthW+'%').css('left', (healthBarW * ((100-healthW)/100))+'px' );
+
+        prevHealth = healthW;
+      }
     }
 
     var alertCharacter = function() {
@@ -152,7 +161,7 @@ console.log(character.health)
       }
 
       if (Math.random() < 0.01) {
-        character.health *= .75
+        character.health -= 20;
         $('#field').animate({backgroundColor:'#e49090'},100,'linear',function(){$(this).animate({backgroundColor:'#90ee90'},100)})
       }
     };
