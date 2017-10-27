@@ -19,8 +19,8 @@ $(function(){
       t = parseInt(d.getTime() / 1000);
     }
 
-    var w = 5;
-    var h = w * 1;
+    var w = 25;
+    var h = w * 2;
     var viking = {
       x: Math.max(w, Math.floor(Math.random() * ($('#field').width() - w))),
       y: Math.max(h, Math.floor(Math.random() * ($('#field').height() - h))),
@@ -103,7 +103,7 @@ $(function(){
     }
 
     $('img').on('dragstart', function(e) { e.preventDefault(); });
-    $('body').on('contextmenu', function(e) { e.preventDefault(); });
+    // $('body').on('contextmenu', function(e) { e.preventDefault(); });
 
     $('body').keyup(docKeyPress).keydown(docKeyPress);
     $('#controls .dpad').mouseup(docKeyPress).mousedown(docKeyPress).mouseout(docMouseOut);
@@ -113,18 +113,16 @@ $(function(){
       $('#character')
         .css('width', character.w + 'px')
         .css('height', character.h + 'px')
-        .css('border-radius', character.w + 'px')
-        .css('background', character.color)
         .css('top', character.y + 'px')
         .css('left', character.x + 'px');
 
-      var lightStrength = 3;
-      $('#character-light')
-        .css('width', character.w*(lightStrength) + 'px')
-        .css('height', character.h*(lightStrength) + 'px')
-        .css('border-radius', character.w*lightStrength + 'px')
-        .css('top', (character.y-character.w) + 'px')
-        .css('left', (character.x-character.h) + 'px');
+      // var lightStrength = 3;
+      // $('#character-light')
+      //   .css('width', character.w*(lightStrength) + 'px')
+      //   .css('height', character.h*(lightStrength) + 'px')
+      //   .css('border-radius', character.w*lightStrength + 'px')
+      //   .css('top', (character.y-character.w) + 'px')
+      //   .css('left', (character.x-character.h) + 'px');
 
       var d = new Date()
       now = parseInt(d.getTime() / 1000);
@@ -156,11 +154,10 @@ $(function(){
     var alertCharacter = function() {
       if ( !character.alert )
       {
-        character.color = 'red';
-        character.h = character.h * 2;
-        character.w = character.w * 2;
         character.alert = true;
-        $('#character-light').removeClass('on');
+        $('#character').addClass('dead');
+        // $('#character-light').removeClass('on');
+        $('body').addClass('dead',300);
       }
     }
 
@@ -172,7 +169,9 @@ $(function(){
       character.x = x;
       character.y = y;
 
-      $('#character-light').removeClass('on');
+      // $('#character-light').removeClass('on');
+      $('body').removeClass('dead');
+      $('#character').removeClass('dead');
 
       setGameTime();
     }
@@ -218,7 +217,7 @@ $(function(){
 
       if (Math.random() < 0.01) {
         character.health -= 20;
-        $('body').animate({backgroundColor:'#f00'},250,'linear',function(){$(this).animate({backgroundColor:'#466cd9'},700)})
+        $('body').addClass('pain',300,function(){$(this).removeClass('pain',700)});
       }
 
       if ( character.health < 100 )
@@ -238,10 +237,10 @@ $(function(){
           {
             for ( f1 in fruits1 ) {
               if (
-                  charCenX >= ((fruits1[f1].x+(fruits1[f1].w/2)) - character.w*2) &&
-                  charCenX <= ((fruits1[f1].x+(fruits1[f1].w/2)) + character.w*2) &&
-                  charCenY <= ((fruits1[f1].y+(fruits1[f1].h/2)) + character.h*2) &&
-                  charCenY >= ((fruits1[f1].y+(fruits1[f1].h/2)) - character.h*2)
+                  charCenX >= ((fruits1[f1].x+(fruits1[f1].w/2)) - character.w) &&
+                  charCenX <= ((fruits1[f1].x+(fruits1[f1].w/2)) + character.w) &&
+                  charCenY <= ((fruits1[f1].y+(fruits1[f1].h/2)) + character.w) &&
+                  charCenY >= ((fruits1[f1].y+(fruits1[f1].h/2)) - character.w)
                  )
               {
                 foundFruit = fruits1[f1].element;
@@ -256,10 +255,10 @@ $(function(){
           {
             for ( f2 in fruits2 ) {
               if (
-                  charCenX >= ((fruits2[f2].x+(fruits2[f2].w/2)) - character.w*2) &&
-                  charCenX <= ((fruits2[f2].x+(fruits2[f2].w/2)) + character.w*2) &&
-                  charCenY <= ((fruits2[f2].y+(fruits2[f2].h/2)) + character.h*2) &&
-                  charCenY >= ((fruits2[f2].y+(fruits2[f2].h/2)) - character.h*2)
+                  charCenX >= ((fruits2[f2].x+(fruits2[f2].w/2)) - character.w) &&
+                  charCenX <= ((fruits2[f2].x+(fruits2[f2].w/2)) + character.w) &&
+                  charCenY <= ((fruits2[f2].y+(fruits2[f2].h/2)) + character.w) &&
+                  charCenY >= ((fruits2[f2].y+(fruits2[f2].h/2)) - character.w)
                  )
               {
                 foundFruit = fruits2[f2].element;
@@ -274,10 +273,10 @@ $(function(){
           {
             for ( f3 in fruits3 ) {
               if (
-                  charCenX >= ((fruits3[f3].x+(fruits3[f3].w/2)) - character.w*2) &&
-                  charCenX <= ((fruits3[f3].x+(fruits3[f3].w/2)) + character.w*2) &&
-                  charCenY <= ((fruits3[f3].y+(fruits3[f3].h/2)) + character.h*2) &&
-                  charCenY >= ((fruits3[f3].y+(fruits3[f3].h/2)) - character.h*2)
+                  charCenX >= ((fruits3[f3].x+(fruits3[f3].w/2)) - character.w) &&
+                  charCenX <= ((fruits3[f3].x+(fruits3[f3].w/2)) + character.w) &&
+                  charCenY <= ((fruits3[f3].y+(fruits3[f3].h/2)) + character.w) &&
+                  charCenY >= ((fruits3[f3].y+(fruits3[f3].h/2)) - character.w)
                  )
               {
                 foundFruit = fruits3[f3].element;
@@ -293,7 +292,7 @@ $(function(){
           {
             character.health += foundHealth;
             $(foundFruit).remove();
-            $('#character-light').addClass('on');
+            // $('#character-light').addClass('on');
           }
         }
       }
@@ -329,7 +328,7 @@ $(function(){
     var fruits = [];
     var generateFood = function() {
 
-      var f = 20;//Math.floor(Math.random()*20)+10;
+      var f = Math.floor(Math.random()*20)+10;
 
       for ( var n = 0; n < f; n++ )
       {
@@ -339,7 +338,12 @@ $(function(){
         seed.y = Math.max(character.h, Math.floor(Math.random() * ($('#field').height() - character.h)));
 
 
-        seed.element = $('<div class="food apple"></div>').css('left',seed.x+'px').css('top',seed.y+'px');
+        seed.element = $('<div class="food apple"></div>')
+                          .css('left',seed.x+'px')
+                          .css('top',seed.y+'px')
+                          .css('height', (character.h/4)+'px')
+                          .css('width', (character.h/4)+'px') // do h for both
+                          ;
         $('#field').append( seed.element );
 
         seed.w = parseInt($(seed.element).width());
