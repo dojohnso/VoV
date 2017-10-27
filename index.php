@@ -2,6 +2,8 @@
 <head>
 	<title>Victory or Valhalla: A Viking's Survival</title>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
 	<script src="https://use.fontawesome.com/f92517f67c.js"></script>
 
 	<script
