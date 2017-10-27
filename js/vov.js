@@ -14,7 +14,6 @@ $(function(){
 
     var w = 5;
     var h = w * 1;
-    /// store reference to character's position and element
     var viking = {
       x: Math.max(w, Math.floor(Math.random() * ($('#field').width() - w))),
       y: Math.max(h, Math.floor(Math.random() * ($('#field').height() - h))),
@@ -70,9 +69,11 @@ $(function(){
         .css('top', character.y + 'px')
         .css('left', character.x + 'px');
 
+      var lightStrength = 3;
       $('#character-light')
-        .css('width', character.w*(3) + 'px')
-        .css('height', character.h*(3) + 'px')
+        .css('width', character.w*(lightStrength) + 'px')
+        .css('height', character.h*(lightStrength) + 'px')
+        .css('border-radius', character.w*lightStrength + 'px')
         .css('top', (character.y-character.w) + 'px')
         .css('left', (character.x-character.h) + 'px');
 
@@ -110,6 +111,7 @@ $(function(){
         character.h = character.h * 2;
         character.w = character.w * 2;
         character.alert = true;
+        $('#character-light').removeClass('on');
       }
     }
 
@@ -120,6 +122,8 @@ $(function(){
       character = viking;
       character.x = x;
       character.y = y;
+
+      $('#character-light').removeClass('on');
 
       setGameTime();
     }
@@ -175,22 +179,73 @@ $(function(){
         var charCenY = character.y + character.h/2;
 
         var mx = Math.floor(charCenX/10);
-        if ( fruits[mx] )
-        {
-          for ( f in fruits[mx] ) {
-            if (
-                charCenX >= ((fruits[mx][f].x+(fruits[mx][f].w/2)) - character.w*2) &&
-                charCenX <= ((fruits[mx][f].x+(fruits[mx][f].w/2)) + character.w*2) &&
-                charCenY <= ((fruits[mx][f].y+(fruits[mx][f].h/2)) + character.h*2) &&
-                charCenY >= ((fruits[mx][f].y+(fruits[mx][f].h/2)) - character.h*2)
-               )
-            {
+        fruits1 = fruits[mx] ? fruits[mx] : [];
+        fruits2 = fruits[mx+1] ? fruits[mx+1] : [];
+        fruits3 = fruits[mx-1] ? fruits[mx-1] : [];
 
-              character.health += fruits[mx][f].value;
-              $(fruits[mx][f].element).remove();
-              fruits[mx].splice(f,1)
-              break;
+        if ( fruits1.length || fruits2.length || fruits3.length )
+        {
+          var foundFruit = false;
+          if ( fruits1.length )
+          {
+            for ( f1 in fruits1 ) {
+              if (
+                  charCenX >= ((fruits1[f1].x+(fruits1[f1].w/2)) - character.w*2) &&
+                  charCenX <= ((fruits1[f1].x+(fruits1[f1].w/2)) + character.w*2) &&
+                  charCenY <= ((fruits1[f1].y+(fruits1[f1].h/2)) + character.h*2) &&
+                  charCenY >= ((fruits1[f1].y+(fruits1[f1].h/2)) - character.h*2)
+                 )
+              {
+                foundFruit = fruits1[f1].element;
+                foundHealth = fruits1[f1].value;
+                fruits1.splice(f1,1);
+                break;
+              }
             }
+          }
+
+          if ( fruits2.length )
+          {
+            for ( f2 in fruits2 ) {
+              if (
+                  charCenX >= ((fruits2[f2].x+(fruits2[f2].w/2)) - character.w*2) &&
+                  charCenX <= ((fruits2[f2].x+(fruits2[f2].w/2)) + character.w*2) &&
+                  charCenY <= ((fruits2[f2].y+(fruits2[f2].h/2)) + character.h*2) &&
+                  charCenY >= ((fruits2[f2].y+(fruits2[f2].h/2)) - character.h*2)
+                 )
+              {
+                foundFruit = fruits2[f2].element;
+                foundHealth = fruits2[f2].value;
+                fruits2.splice(f2,1);
+                break;
+              }
+            }
+          }
+
+          if ( fruits3.length )
+          {
+            for ( f3 in fruits3 ) {
+              if (
+                  charCenX >= ((fruits3[f3].x+(fruits3[f3].w/2)) - character.w*2) &&
+                  charCenX <= ((fruits3[f3].x+(fruits3[f3].w/2)) + character.w*2) &&
+                  charCenY <= ((fruits3[f3].y+(fruits3[f3].h/2)) + character.h*2) &&
+                  charCenY >= ((fruits3[f3].y+(fruits3[f3].h/2)) - character.h*2)
+                 )
+              {
+                foundFruit = fruits3[f3].element;
+                foundHealth = fruits3[f3].value;
+                fruits3.splice(f3,1);
+
+                break;
+              }
+            }
+          }
+
+          if ( foundFruit )
+          {
+            character.health += foundHealth;
+            $(foundFruit).remove();
+            $('#character-light').addClass('on');
           }
         }
       }

@@ -12,7 +12,9 @@ body {
   z-index:1000;
 }
 
-#character-light { z-index: 999; }
+#character-light { z-index: 999; background: transparent; }
+#character-light.on { background: yellow; }
+
 
 #field {
   position: absolute;
