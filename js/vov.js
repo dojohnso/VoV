@@ -28,7 +28,7 @@ $(function(){
 
     var character = jQuery.extend(true, {}, viking);
 
-    docKeyPress = function(e) {
+    var docKeyPress = function(e) {
         var kc = e.keyCode || e.which;
 
         if ( $.inArray( kc, [keys.UP, keys.RIGHT, keys.LEFT, keys.DOWN] ) > -1  )
@@ -40,7 +40,34 @@ $(function(){
           }
         }
 
-        keys[kc] = e.type == 'keydown';
+
+        if ( $(e.currentTarget).hasClass('right') )
+        {
+          kc = keys.RIGHT;
+        }
+        else if ( $(e.currentTarget).hasClass('left') )
+        {
+          kc = keys.LEFT;
+        }
+        else if ( $(e.currentTarget).hasClass('up') )
+        {
+          kc = keys.UP;
+        }
+        else if ( $(e.currentTarget).hasClass('down') )
+        {
+          kc = keys.DOWN;
+        }
+
+        keys[kc] = e.type == 'keydown' || e.type == 'mousedown';
+
+        if ( keys[kc] )
+        {
+          $('#controls .dpad.'+kc).addClass('push',250)
+        }
+        else
+        {
+          $('#controls .dpad.'+kc).removeClass('push',50);
+        }
 
         if ( keys[keys.UP] === true
               || keys[keys.RIGHT] === true
@@ -57,7 +84,18 @@ $(function(){
 
       };
 
+    var docMouseOut = function(e) {
+      keys[keys.UP] = false;
+      keys[keys.DOWN] = false;
+      keys[keys.LEFT] = false;
+      keys[keys.RIGHT] = false;
+      $('#controls .dpad').removeClass('push',50);
+    }
+
+    $('img').on('dragstart', function(e) { e.preventDefault(); });
+
     $('body').keyup(docKeyPress).keydown(docKeyPress);
+    $('#controls .dpad').mouseup(docKeyPress).mousedown(docKeyPress).mouseout(docMouseOut);
 
     var prevHealth = character.health;
     var updateCharacter = function() {
@@ -268,7 +306,6 @@ $(function(){
 
       updateCharacter();
     };
-
 
     $('#character').on('click', function() {
       clearCharacterAlert();
